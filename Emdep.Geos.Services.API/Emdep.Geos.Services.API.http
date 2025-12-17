@@ -1,0 +1,6 @@
+@Emdep.Geos.Services.API_HostAddress = http://localhost:5188
+
+GET {{Emdep.Geos.Services.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

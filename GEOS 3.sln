@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{925C4A8F-5F73-4B51-AA81-4B3081424E8D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{901199F8-5420-4DC0-9FFA-3764D5AC70DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emdep.Geos.Services.Core", "Emdep.Geos.Services.Core\Emdep.Geos.Services.Core.csproj", "{DCE5B3A3-752A-4C36-BFAC-C62CACDDA475}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emdep.Geos.Services.Infrastructure", "Emdep.Geos.Services.Infrastructure\Emdep.Geos.Services.Infrastructure.csproj", "{138C3B16-8CAB-4824-B50D-FD802B1F2F90}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emdep.Geos.Services.API", "Emdep.Geos.Services.API\Emdep.Geos.Services.API.csproj", "{00723523-64EF-4DE0-8BA0-439877076A68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{E5BEE2AF-129C-4F60-9C2A-5595BD233AC1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DCE5B3A3-752A-4C36-BFAC-C62CACDDA475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCE5B3A3-752A-4C36-BFAC-C62CACDDA475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCE5B3A3-752A-4C36-BFAC-C62CACDDA475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCE5B3A3-752A-4C36-BFAC-C62CACDDA475}.Release|Any CPU.Build.0 = Release|Any CPU
+		{138C3B16-8CAB-4824-B50D-FD802B1F2F90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{138C3B16-8CAB-4824-B50D-FD802B1F2F90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{138C3B16-8CAB-4824-B50D-FD802B1F2F90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{138C3B16-8CAB-4824-B50D-FD802B1F2F90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00723523-64EF-4DE0-8BA0-439877076A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00723523-64EF-4DE0-8BA0-439877076A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00723523-64EF-4DE0-8BA0-439877076A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00723523-64EF-4DE0-8BA0-439877076A68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {E5BEE2AF-129C-4F60-9C2A-5595BD233AC1}
+		{925C4A8F-5F73-4B51-AA81-4B3081424E8D} = {E5BEE2AF-129C-4F60-9C2A-5595BD233AC1}
+		{901199F8-5420-4DC0-9FFA-3764D5AC70DC} = {E5BEE2AF-129C-4F60-9C2A-5595BD233AC1}
+		{DCE5B3A3-752A-4C36-BFAC-C62CACDDA475} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{138C3B16-8CAB-4824-B50D-FD802B1F2F90} = {925C4A8F-5F73-4B51-AA81-4B3081424E8D}
+		{00723523-64EF-4DE0-8BA0-439877076A68} = {901199F8-5420-4DC0-9FFA-3764D5AC70DC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6B8E2958-C81A-4BDC-87EA-3FA46981A1BC}
+	EndGlobalSection
+EndGlobal
