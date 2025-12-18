@@ -1,8 +1,12 @@
 using Asp.Versioning;
+using Emdep.Geos.API.Configuration;
 using Microsoft.AspNetCore.ResponseCompression;
 using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<APMSettings>(
+    builder.Configuration.GetSection("APMSettings"));
 
 builder.Services.AddApiVersioning(options =>
 {
