@@ -18,16 +18,16 @@ namespace Emdep.Geos.Core.Interfaces
         Task<IList<LookupValue>> GetLookupValuesAsync(byte key);
 
         // 3. GetDepartmentsForActionPlan_V2590
-        Task<List<Department>> GetDepartmentsAsync();
+        Task<List<Department>> GetDepartmentsForActionPlanAsync();
 
         // 4. GetCustomersWithSite_V2610
         // Nota: Precisas do modelo APMCustomer (adiciona ao Placeholders se não tiveres)
-        Task<List<APMCustomer>> GetCustomersWithSiteAsync();
+        Task<List<APMCustomer>> GetCustomersWithSitesAsync();
 
         // 5. GetActionPlanDetails_V2690
         Task<List<APMActionPlan>> GetActionPlanDetailsAsync(string selectedPeriod, int idUser);
 
         // 6. GetAuthorizedLocationListByIdUser_V2690
-        Task<List<Company>> GetAuthorizedLocationsAsync(int idUser);
+        Task<List<Company>> GetAuthorizedLocationListByIdUserAsync(int idUser);
     }
 }

@@ -1,12 +1,12 @@
 using Asp.Versioning;
-using Emdep.Geos.API.Configuration;
+using Emdep.Geos.Core.Interfaces;
+using Emdep.Geos.Infrastructure.Repositories;
 using Microsoft.AspNetCore.ResponseCompression;
+using MySqlConnector;
+using Scalar.AspNetCore;
 using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.Configure<APMSettings>(
-    builder.Configuration.GetSection("APMSettings"));
 
 builder.Services.AddApiVersioning(options =>
 {
@@ -17,7 +17,6 @@ builder.Services.AddApiVersioning(options =>
 })
 .AddMvc();
 
-// Configurar Compressão (Crítico para VPN Intercontinental)
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -30,25 +29,26 @@ builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
     options.Level = CompressionLevel.Fastest;
 });
 
-// Registar Controllers e Swagger
+builder.Services.AddTransient<MySqlConnection>(_ =>
+    new MySqlConnection(builder.Configuration.GetConnectionString("WorkbenchContext")));
+
+builder.Services.AddScoped<IAPMRepository, APMRepository>();
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// --- AQUI VAMOS REGISTAR O TEU REPOSITÓRIO QUANDO TIVERMOS O CÓDIGO ---
-// builder.Services.AddScoped<IAPMRepository, APMRepository>();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapOpenApi();
+    app.MapScalarApiReference();
 }
 
-app.UseHttpsRedirection();
-
 app.UseResponseCompression();
+
+app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

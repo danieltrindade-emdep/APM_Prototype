@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,22 +10,21 @@ namespace Emdep.Geos.API.Controllers.V2610;
 [ApiVersion("2610")]
 public class APMController : ControllerBase
 {
-    private readonly IConfiguration _config;
+    private readonly IAPMRepository _repository;
 
-    public APMController(IConfiguration config)
+    public APMController(IAPMRepository repository)
     {
-        _config = config;
+        _repository = repository;
     }
 
     [HttpGet("customers-with-site")]
-    public ActionResult<List<APMCustomer>> GetCustomersWithSite()
+    public async Task<ActionResult<List<APMCustomer>>> GetCustomersWithSite()
     {
         try
         {
-            APMManager mgr = new APMManager();
-            string conn = _config.GetConnectionString("WorkbenchContext");
+            var data = await _repository.GetCustomersWithSitesAsync();
 
-            return Ok(mgr.GetCustomersWithSite_V2610(conn));
+            return Ok(data);
         }
         catch (Exception ex)
         {

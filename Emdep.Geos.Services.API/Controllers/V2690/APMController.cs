@@ -1,8 +1,7 @@
 ﻿using Asp.Versioning;
-using Emdep.Geos.API.Configuration; // Namespace dos settings
+using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Core.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 
 namespace Emdep.Geos.API.Controllers.V2690;
 
@@ -11,29 +10,22 @@ namespace Emdep.Geos.API.Controllers.V2690;
 [ApiVersion("2690")]
 public class APMController : ControllerBase
 {
-    private readonly IConfiguration _config;
-    private readonly APMSettings _settings;
+    private readonly IAPMRepository _repository;
 
-    public APMController(IConfiguration config, IOptions<APMSettings> settings)
+    // Construtor limpo: Apenas injetamos o Repositório
+    public APMController(IAPMRepository repository)
     {
-        _config = config;
-        _settings = settings.Value;
+        _repository = repository;
     }
 
-    private string GetConn() => _config.GetConnectionString("WorkbenchContext");
-
     [HttpGet("details")]
-    public ActionResult<List<APMActionPlan>> GetActionPlanDetails(string selectedPeriod, int idUser)
+    public async Task<ActionResult<List<APMActionPlan>>> GetActionPlanDetails(string selectedPeriod, int idUser)
     {
         try
         {
-            APMManager mgr = new APMManager();
-            // Requer ConnectionString e CountryFilePath
-            return Ok(mgr.GetActionPlanDetails_V2690(
-                GetConn(),
-                selectedPeriod,
-                idUser,
-                _settings.Paths.CountryFilePath));
+            var data = await _repository.GetActionPlanDetailsAsync(selectedPeriod, idUser);
+
+            return Ok(data);
         }
         catch (Exception ex)
         {
@@ -42,16 +34,14 @@ public class APMController : ControllerBase
     }
 
     [HttpGet("authorized-locations/{idUser}")]
-    public ActionResult<List<Company>> GetAuthorizedLocationListByIdUser(int idUser)
+    public async Task<ActionResult<List<Company>>> GetAuthorizedLocationListByIdUser(int idUser)
     {
         try
         {
-            APMManager mgr = new APMManager();
-            // Requer ConnectionString e CountryFilePath
-            return Ok(mgr.GetAuthorizedLocationListByIdUser_V2690(
-                GetConn(),
-                idUser,
-                _settings.Paths.CountryFilePath));
+            // Adeus 'new APMManager()'
+            var data = await _repository.GetAuthorizedLocationListByIdUserAsync(idUser);
+
+            return Ok(data);
         }
         catch (Exception ex)
         {

@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,22 +10,21 @@ namespace Emdep.Geos.API.Controllers.V2590;
 [ApiVersion("2590")]
 public class APMController : ControllerBase
 {
-    private readonly IConfiguration _config;
+    private readonly IAPMRepository _repository;
 
-    public APMController(IConfiguration config)
+    public APMController(IAPMRepository repository)
     {
-        _config = config;
+        _repository = repository;
     }
 
     [HttpGet("departments")]
-    public ActionResult<List<Department>> GetDepartments()
+    public async Task<ActionResult<List<Department>>> GetDepartments()
     {
         try
         {
-            APMManager mgr = new APMManager();
-            string conn = _config.GetConnectionString("WorkbenchContext");
+            var data = await _repository.GetDepartmentsForActionPlanAsync();
 
-            return Ok(mgr.GetDepartmentsForActionPlan_V2590(conn));
+            return Ok(data);
         }
         catch (Exception ex)
         {

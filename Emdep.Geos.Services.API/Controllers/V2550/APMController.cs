@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,17 +10,21 @@ namespace Emdep.Geos.API.Controllers.V2550;
 [ApiVersion("2550")]
 public class APMController : ControllerBase
 {
-    // Esta versão não precisa de config nem settings (o método antigo não pedia)
+    private readonly IAPMRepository _repository;
 
-    [HttpGet("lookup-values/{key}")]
-    public ActionResult<IList<LookupValue>> GetLookupValues(byte key)
+    public APMController(IAPMRepository repository)
+    {
+        _repository = repository;
+    }
+
+    [HttpGet("lookupvalues/{key}")]
+    public async Task<ActionResult<IList<LookupValue>>> GetLookupValues(byte key)
     {
         try
         {
-            // O código original usava CrmManager
-            CrmManager mgr = new CrmManager();
-            var list = mgr.GetLookupValues(key);
-            return Ok(list);
+            var data = await _repository.GetLookupValuesAsync(key);
+
+            return Ok(data);
         }
         catch (Exception ex)
         {

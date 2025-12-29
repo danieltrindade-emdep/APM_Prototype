@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,15 +10,15 @@ namespace Emdep.Geos.API.Controllers.V2570;
 [ApiVersion("2570")]
 public class APMController : ControllerBase
 {
-    private readonly IConfiguration _config;
+    private readonly IAPMRepository _repository;
 
-    public APMController(IConfiguration config)
+    public APMController(IAPMRepository repository)
     {
-        _config = config;
+        _repository = repository;
     }
 
     [HttpGet("responsibles")]
-    public ActionResult<List<Responsible>> GetActiveInactiveResponsible(
+    public async Task<ActionResult<List<Responsible>>> GetActiveInactiveResponsible(
         int idCompany,
         string selectedPeriod,
         string idsOrganization,
@@ -26,11 +27,14 @@ public class APMController : ControllerBase
     {
         try
         {
-            APMManager mgr = new APMManager();
-            string conn = _config.GetConnectionString("WorkbenchContext");
+            var data = await _repository.GetActiveInactiveResponsibleAsync(
+                idCompany,
+                selectedPeriod,
+                idsOrganization,
+                idsDepartments,
+                idPermission);
 
-            return Ok(mgr.GetActiveInactiveResponsibleForActionPlan_V2570(
-                conn, idCompany, selectedPeriod, idsOrganization, idsDepartments, idPermission));
+            return Ok(data);
         }
         catch (Exception ex)
         {
