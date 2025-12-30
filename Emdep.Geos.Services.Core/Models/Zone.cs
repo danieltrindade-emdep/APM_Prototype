@@ -12,7 +12,6 @@
         public string Name_ru { get; set; }
         public string Name_zh { get; set; }
 
-        // Dependência: Country (Já existe o ficheiro real)
         public List<Country> Countries { get; set; } = new();
     }
 }

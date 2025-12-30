@@ -1,4 +1,6 @@
 ﻿using Emdep.Geos.Services.Core.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Emdep.Geos.Core.Models
 {
@@ -13,22 +15,24 @@ namespace Emdep.Geos.Core.Models
         public byte DepartmentInUse { get; set; }
         public string DepartmentHtmlColor { get; set; }
         public byte DepartmentIsIsolated { get; set; }
-
-        // Dependência: Employee (Já refatorado)
+        [NotMapped]
+        [JsonIgnore]
         public List<Employee> Employees { get; set; } = new();
-
-        // Dependência: JobDescription (Já está no Placeholders.cs)
+        [NotMapped]
         public List<JobDescription> JobDescriptions { get; set; } = new();
-
+        [NotMapped]
         public List<Department> ChildDepartments { get; set; } = new();
 
-        // Dependência: LookupValue (Já refatorado)
+        [NotMapped]
         public LookupValue DepartmentArea { get; set; }
-
+        [NotMapped]
+        [JsonIgnore]
         public Department ParentDepartment { get; set; }
-
+        [NotMapped]
         public uint EmployeesCount { get; set; }
+        [NotMapped]
         public decimal YearsCount { get; set; }
+        [NotMapped]
         public decimal EmployeesRecordCount { get; set; }
 
         public override string ToString() => DepartmentName;

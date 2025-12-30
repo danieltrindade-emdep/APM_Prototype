@@ -1,4 +1,5 @@
 ﻿using Emdep.Geos.Services.Core.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Emdep.Geos.Core.Models
 {
@@ -11,33 +12,37 @@ namespace Emdep.Geos.Core.Models
         public int IdGender { get; set; }
         public int IdCompanyShift { get; set; }
 
-        // Dependência: Currency (Vais precisar de criar esta classe também)
+        [NotMapped]
         public Currency Currency { get; set; }
 
         public int IdOrganizationCode { get; set; }
 
-        // No original a propriedade chamava-se 'Organization' mas usava o campo 'organizationCode'
         public string Organization { get; set; }
 
         public int IdOrganizationRegion { get; set; }
         public string OrganizationRegion { get; set; }
         public int IdEmployeeStatus { get; set; }
         public bool IsInActive { get; set; }
+        [NotMapped]
         public bool IsTaskField { get; set; }
         public string FullName { get; set; }
+        [NotMapped]
         public string EmployeeDepartments { get; set; }
+        [NotMapped]
         public string JobCode { get; set; }
-
-        // REMOVIDO: ImageSource OwnerImage (Incompatível com API)
-
-        // Mantido o array de bytes (Isto é o que vais enviar via JSON)
+        [NotMapped]
         public byte[] ImageInBytes { get; set; }
-
+        [NotMapped]
         public string EmployeeCodeWithIdGender { get; set; }
+        [NotMapped]
         public int IdUser { get; set; }
+        [NotMapped]
         public string UserName { get; set; }
+        [NotMapped]
         public string ResponsibleDisplayName { get; set; }
+        [NotMapped]
         public string JobDescriptionTitle { get; set; }
+        [NotMapped]
         public int IdTask { get; set; }
     }
 }

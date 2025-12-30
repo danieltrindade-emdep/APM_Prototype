@@ -8,14 +8,23 @@ using System.IO.Compression;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTudo", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddApiVersioning(options =>
 {
     options.DefaultApiVersion = new ApiVersion(2690, 0);
     options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
     options.ApiVersionReader = new UrlSegmentApiVersionReader();
-})
-.AddMvc();
+}).AddMvc();
 
 builder.Services.AddResponseCompression(options =>
 {
@@ -36,22 +45,47 @@ builder.Services.AddScoped<IAPMRepository, APMRepository>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+
+builder.Services.AddOpenApi("v1", options =>
+{
+
+    options.AddSchemaTransformer((schema, context, cancellationToken) =>
+    {
+        if (context.JsonTypeInfo.Type.FullName != null &&
+           (context.JsonTypeInfo.Type.FullName.StartsWith("System.Text.RegularExpressions") ||
+            context.JsonTypeInfo.Type.FullName.Contains("ValueSpan")))
+        {
+            schema.Type = "string";
+            schema.Properties = null;
+        }
+        return Task.CompletedTask;
+    });
+});
 
 var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
+app.UseDeveloperExceptionPage();
+
+app.UseCors("PermitirTudo");
+
+// Mapeia o documento JSON em /openapi/v1.json
+app.MapOpenApi();
+
+app.MapScalarApiReference(options =>
 {
-    app.MapOpenApi();
-    app.MapScalarApiReference();
-}
+    options.WithOpenApiRoutePattern("/openapi/v1.json");
+
+    options.Title = "Minha API";
+});
 
 app.UseResponseCompression();
 
-app.UseHttpsRedirection();
+// 4. COMENTE ESTA LINHA SE ESTIVER A USAR HTTP (Sem certificado SSL) NO IP
+// Se aceder via http://92... e isto estiver ativo, a API tenta forçar https://
+// e o pedido do JSON falha silenciosamente.
+// app.UseHttpsRedirection(); // <--- COMENTE ISTO PARA TESTAR
 
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
