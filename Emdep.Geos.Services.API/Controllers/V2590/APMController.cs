@@ -23,7 +23,6 @@ public class APMController : ControllerBase
         try
         {
             var data = await _repository.GetDepartmentsForActionPlanAsync();
-
             return Ok(data);
         }
         catch (Exception ex)

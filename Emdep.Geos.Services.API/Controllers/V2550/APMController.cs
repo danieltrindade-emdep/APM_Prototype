@@ -18,12 +18,11 @@ public class APMController : ControllerBase
     }
 
     [HttpGet("lookupvalues/{key}")]
-    public async Task<ActionResult<IList<LookupValue>>> GetLookupValues(byte key)
+    public async Task<ActionResult<IEnumerable<LookupValue>>> GetLookupValues(int key)
     {
         try
         {
             var data = await _repository.GetLookupValuesAsync(key);
-
             return Ok(data);
         }
         catch (Exception ex)
