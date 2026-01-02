@@ -1,91 +1,113 @@
 using Asp.Versioning;
+using Emdep.Geos.API.Middleware;
 using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Infrastructure.Repositories;
 using Microsoft.AspNetCore.ResponseCompression;
 using MySqlConnector;
 using Scalar.AspNetCore;
+using Serilog;
 using System.IO.Compression;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddCors(options =>
+try
 {
-    options.AddPolicy("PermitirTudo", policy =>
+    Log.Information("Starting GEOS 3 API...");
+
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog((context, services, configuration) => configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services));
+
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
+
+    builder.Services.AddCors(options =>
     {
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
-
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(2690, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-    options.ApiVersionReader = new UrlSegmentApiVersionReader();
-}).AddMvc();
-
-builder.Services.AddResponseCompression(options =>
-{
-    options.EnableForHttps = true;
-    options.Providers.Add<BrotliCompressionProvider>();
-    options.Providers.Add<GzipCompressionProvider>();
-});
-
-builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
-{
-    options.Level = CompressionLevel.Fastest;
-});
-
-builder.Services.AddTransient<MySqlConnection>(_ =>
-    new MySqlConnection(builder.Configuration.GetConnectionString("WorkbenchContext")));
-
-builder.Services.AddScoped<IAPMRepository, APMRepository>();
-
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.AddOpenApi("v1", options =>
-{
-
-    options.AddSchemaTransformer((schema, context, cancellationToken) =>
-    {
-        if (context.JsonTypeInfo.Type.FullName != null &&
-           (context.JsonTypeInfo.Type.FullName.StartsWith("System.Text.RegularExpressions") ||
-            context.JsonTypeInfo.Type.FullName.Contains("ValueSpan")))
+        options.AddPolicy("AllowAll", policy =>
         {
-            schema.Type = "string";
-            schema.Properties = null;
-        }
-        return Task.CompletedTask;
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
     });
-});
 
-var app = builder.Build();
+    builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(2690, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+        options.ApiVersionReader = new UrlSegmentApiVersionReader();
+    }).AddMvc();
 
-app.UseDeveloperExceptionPage();
+    builder.Services.AddResponseCompression(options =>
+    {
+        options.EnableForHttps = true;
+        options.Providers.Add<BrotliCompressionProvider>();
+        options.Providers.Add<GzipCompressionProvider>();
+    });
 
-app.UseCors("PermitirTudo");
+    builder.Services.Configure<BrotliCompressionProviderOptions>(options =>
+    {
+        options.Level = CompressionLevel.Fastest;
+    });
 
-// Mapeia o documento JSON em /openapi/v1.json
-app.MapOpenApi();
+    builder.Services.AddTransient<MySqlConnection>(_ =>
+        new MySqlConnection(builder.Configuration.GetConnectionString("WorkbenchContext")));
 
-app.MapScalarApiReference(options =>
+    builder.Services.AddScoped<IAPMRepository, APMRepository>();
+
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+
+    builder.Services.AddOpenApi("v1", options =>
+    {
+
+        options.AddSchemaTransformer((schema, context, cancellationToken) =>
+        {
+            if (context.JsonTypeInfo.Type.FullName != null &&
+               (context.JsonTypeInfo.Type.FullName.StartsWith("System.Text.RegularExpressions") ||
+                context.JsonTypeInfo.Type.FullName.Contains("ValueSpan")))
+            {
+                schema.Type = "string";
+                schema.Properties = null;
+            }
+            return Task.CompletedTask;
+        });
+    });
+
+    var app = builder.Build();
+
+    app.UseDeveloperExceptionPage();
+
+    app.UseCors("AllowAll");
+
+    app.MapOpenApi();
+
+    app.MapScalarApiReference(options =>
+    {
+        options.WithOpenApiRoutePattern("/openapi/v1.json");
+
+        options.Title = "GEOS 3 API";
+    });
+
+    app.UseResponseCompression();
+
+    // app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+    app.MapControllers();
+
+    app.Run();
+}
+catch (Exception ex)
 {
-    options.WithOpenApiRoutePattern("/openapi/v1.json");
-
-    options.Title = "Minha API";
-});
-
-app.UseResponseCompression();
-
-// 4. COMENTE ESTA LINHA SE ESTIVER A USAR HTTP (Sem certificado SSL) NO IP
-// Se aceder via http://92... e isto estiver ativo, a API tenta forçar https://
-// e o pedido do JSON falha silenciosamente.
-// app.UseHttpsRedirection(); // <--- COMENTE ISTO PARA TESTAR
-
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
+    Log.Fatal(ex, "Application failed to start unexpectedly.");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
