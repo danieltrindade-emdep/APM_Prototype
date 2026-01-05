@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using MySqlConnector;
 using Scalar.AspNetCore;
 using Serilog;
+using System.Data;
 using System.IO.Compression;
 
 Log.Logger = new LoggerConfiguration()
@@ -14,7 +15,7 @@ Log.Logger = new LoggerConfiguration()
 
 try
 {
-    Log.Information("Starting GEOS 3 API...");
+    Log.Information("Starting APM PROTOTYPE API...");
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -55,7 +56,9 @@ try
         options.Level = CompressionLevel.Fastest;
     });
 
-    builder.Services.AddTransient<MySqlConnection>(_ =>
+
+
+    builder.Services.AddTransient<IDbConnection>(_ =>
         new MySqlConnection(builder.Configuration.GetConnectionString("WorkbenchContext")));
 
     builder.Services.AddScoped<IAPMRepository, APMRepository>();
@@ -81,7 +84,11 @@ try
 
     var app = builder.Build();
 
-    app.UseDeveloperExceptionPage();
+    app.UseSerilogRequestLogging();
+
+    app.UseExceptionHandler();
+
+    //app.UseDeveloperExceptionPage();
 
     app.UseCors("AllowAll");
 
@@ -91,7 +98,7 @@ try
     {
         options.WithOpenApiRoutePattern("/openapi/v1.json");
 
-        options.Title = "GEOS 3 API";
+        options.Title = "APM PROTOTYPE API";
     });
 
     app.UseResponseCompression();

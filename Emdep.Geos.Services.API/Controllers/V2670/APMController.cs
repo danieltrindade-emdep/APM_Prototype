@@ -18,4 +18,3 @@ public class APMController(IAPMRepository repository) : ControllerBase
         return Ok(data);
     }
 }
-}
