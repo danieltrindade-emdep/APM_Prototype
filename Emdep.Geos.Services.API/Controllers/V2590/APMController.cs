@@ -12,9 +12,9 @@ public class APMController(IAPMRepository repository) : ControllerBase
 {
 
     [HttpGet("departments")]
-    public async Task<ActionResult<List<Department>>> GetDepartments()
+    public async Task<ActionResult<List<Department>>> GetDepartments(CancellationToken cancellationToken)
     {
-        var data = await repository.GetDepartmentsForActionPlanAsync();
+        var data = await repository.GetDepartmentsForActionPlanAsync(cancellationToken);
         return Ok(data);
     }
 }

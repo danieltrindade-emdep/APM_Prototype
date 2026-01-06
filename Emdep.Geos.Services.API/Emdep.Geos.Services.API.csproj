@@ -8,12 +8,14 @@
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
+    <PackageReference Include="Mapster" Version="10.0.0-pre01" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.11" />
     <PackageReference Include="Scalar.AspNetCore" Version="2.11.10" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Emdep.Geos.Contracts\Emdep.Geos.Contracts.csproj" />
     <ProjectReference Include="..\Emdep.Geos.Services.Core\Emdep.Geos.Services.Core.csproj" />
     <ProjectReference Include="..\Emdep.Geos.Services.Infrastructure\Emdep.Geos.Services.Infrastructure.csproj" />
   </ItemGroup>

@@ -12,9 +12,9 @@ public class APMController(IAPMRepository repository) : ControllerBase
 {
 
     [HttpGet("lookupvalues/{key}")]
-    public async Task<ActionResult<IEnumerable<LookupValue>>> GetLookupValues(int key)
+    public async Task<ActionResult<IEnumerable<LookupValue>>> GetLookupValues(int key, CancellationToken cancellationToken)
     {
-        var data = await repository.GetLookupValuesAsync(key);
+        var data = await repository.GetLookupValuesAsync(key, cancellationToken);
         return Ok(data);
     }
 }

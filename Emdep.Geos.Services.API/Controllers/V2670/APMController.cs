@@ -12,9 +12,9 @@ public class APMController(IAPMRepository repository) : ControllerBase
 {
 
     [HttpGet("responsibles-by-location")]
-    public async Task<ActionResult<List<Responsible>>> GetResponsibleByLocation([FromQuery] string idCompanyLocation)
+    public async Task<ActionResult<List<Responsible>>> GetResponsibleByLocation([FromQuery] string idCompanyLocation, CancellationToken cancellationToken)
     {
-        var data = await repository.GetResponsibleByLocationAsync(idCompanyLocation);
+        var data = await repository.GetResponsibleByLocationAsync(idCompanyLocation, cancellationToken);
         return Ok(data);
     }
 }

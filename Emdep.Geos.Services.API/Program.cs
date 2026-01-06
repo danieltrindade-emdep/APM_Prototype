@@ -2,12 +2,15 @@ using Asp.Versioning;
 using Emdep.Geos.API.Middleware;
 using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Infrastructure.Repositories;
+using Emdep.Geos.Services.API.Configuration;
+using Mapster;
 using Microsoft.AspNetCore.ResponseCompression;
 using MySqlConnector;
 using Scalar.AspNetCore;
 using Serilog;
 using System.Data;
 using System.IO.Compression;
+using System.Reflection;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -36,6 +39,8 @@ try
         });
     });
 
+    TypeAdapterConfig.GlobalSettings.Scan(Assembly.GetExecutingAssembly());
+
     builder.Services.AddApiVersioning(options =>
     {
         options.DefaultApiVersion = new ApiVersion(2690, 0);
@@ -62,6 +67,14 @@ try
         new MySqlConnection(builder.Configuration.GetConnectionString("WorkbenchContext")));
 
     builder.Services.AddScoped<IAPMRepository, APMRepository>();
+
+    var apmSettings = builder.Configuration.GetSection("APMSettings").Get<APMSettings>();
+
+    if (apmSettings?.Images != null)
+    {
+        GlobalSettings.EmployeesRoundedUrl = apmSettings.Images.BaseUrlRounded;
+        GlobalSettings.EmployeesNormalUrl = apmSettings.Images.BaseUrlNormal;
+    }
 
     builder.Services.AddControllers();
     builder.Services.AddEndpointsApiExplorer();

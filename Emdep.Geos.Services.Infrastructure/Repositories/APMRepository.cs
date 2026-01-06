@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Emdep.Geos.Core.Interfaces;
 using Emdep.Geos.Core.Models;
+using Emdep.Geos.Infrastructure.Constants;
 using System.Data;
 
 namespace Emdep.Geos.Infrastructure.Repositories
@@ -8,15 +9,20 @@ namespace Emdep.Geos.Infrastructure.Repositories
     public class APMRepository(IDbConnection dbConnection) : IAPMRepository
     {
         #region Methods
-        public async Task<List<ActionPlan>> GetActionPlanDetailsAsync(string selectedPeriod, int idUser)
+        public async Task<List<ActionPlan>> GetActionPlanDetailsAsync(string selectedPeriod, int idUser, CancellationToken cancellationToken = default)
         {
-            const string spName = "APM_GetActionPlanDetails_V2690";
-
             var parameters = new DynamicParameters();
             parameters.Add("_SelectedPeriod", selectedPeriod);
             parameters.Add("_iduser", idUser);
 
-            using (var multi = await dbConnection.QueryMultipleAsync(spName, parameters, commandType: CommandType.StoredProcedure))
+            var command = new CommandDefinition(
+                APMConstants.StoredProcedures.APM_GetActionPlanDetails,
+                parameters,
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
+            );
+
+            using (var multi = await dbConnection.QueryMultipleAsync(command))
             {
                 var plans = (await multi.ReadAsync<ActionPlan>()).ToList();
                 var tasks = (await multi.ReadAsync<ActionPlanTask>()).ToList();
@@ -45,93 +51,86 @@ namespace Emdep.Geos.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<LookupValue>> GetLookupValuesAsync(int key)
+        public async Task<IEnumerable<LookupValue>> GetLookupValuesAsync(int key, CancellationToken cancellationToken = default)
         {
-            const string sql = @"
-                SELECT 
-                    IdLookupValue, 
-                    Value, 
-                    HtmlColor, 
-                    Position, 
-                    IdLookupKey, 
-                    Abbreviation, 
-                    ImageName, 
-                    IdParent,
-                    InUse
-                FROM lookup_values 
-                WHERE IdLookupKey = @Key 
-                  AND InUse = 1 
-                ORDER BY Position";
+            var command = new CommandDefinition(
+                APMConstants.SqlQueries.GetLookupValuesQuery,
+                new { Key = key },
+                cancellationToken: cancellationToken
+            );
 
-            var result = await dbConnection.QueryAsync<LookupValue>(sql, new { Key = key });
-
-            return result;
+            return await dbConnection.QueryAsync<LookupValue>(command);
         }
 
-        public async Task<List<Department>> GetDepartmentsForActionPlanAsync()
+        public async Task<List<Department>> GetDepartmentsForActionPlanAsync(CancellationToken cancellationToken = default)
         {
-            const string spName = "APM_GetDepartmentsForActionPlan_V2590";
+            var command = new CommandDefinition(
+               APMConstants.StoredProcedures.APM_GetDepartmentsForActionPlan,
+               commandType: CommandType.StoredProcedure,
+               cancellationToken: cancellationToken
+           );
 
-            var result = await dbConnection.QueryAsync<Department>(
-                spName,
-                commandType: CommandType.StoredProcedure
-            );
+            var result = await dbConnection.QueryAsync<Department>(command);
 
             return result.ToList();
         }
 
-        public async Task<List<Responsible>> GetResponsibleByLocationAsync(string idCompanyLocation)
+        public async Task<List<Responsible>> GetResponsibleByLocationAsync(string idCompanyLocation, CancellationToken cancellationToken = default)
         {
-            const string spName = "APM_GetResponsibleByLocation_V2670";
-
             var parameters = new DynamicParameters();
             parameters.Add("_IdCompanyLocation", idCompanyLocation);
 
-            var result = await dbConnection.QueryAsync<Responsible>(
-                spName,
+            var command = new CommandDefinition(
+                APMConstants.StoredProcedures.APM_GetResponsibleByLocation,
                 parameters,
-                commandType: CommandType.StoredProcedure
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
             );
+
+            var result = await dbConnection.QueryAsync<Responsible>(command);
 
             return result.ToList();
         }
 
-        public async Task<List<YBPCode>> GetAllYBPCodeAsync()
+        public async Task<List<YBPCode>> GetAllYBPCodeAsync(CancellationToken cancellationToken = default)
         {
-            const string spName = "APM_GetAllYBPCode";
-
-            var result = await dbConnection.QueryAsync<YBPCode>(
-                spName,
-                commandType: CommandType.StoredProcedure
+            var command = new CommandDefinition(
+                APMConstants.StoredProcedures.APM_GetAllYBPCode,
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
             );
+
+            var result = await dbConnection.QueryAsync<YBPCode>(command);
 
             return result.ToList();
         }
 
-        public async Task<List<CustomerResponsible>> GetCustomersWithSitesAndResponsibleAsync()
+        public async Task<List<CustomerResponsible>> GetCustomersWithSitesAndResponsibleAsync(CancellationToken cancellationToken = default)
         {
-            const string spName = "APM_GetCustomersWithSitesAndResponsible_V2690";
-
-            var result = await dbConnection.QueryAsync<CustomerResponsible>(
-                spName,
-                commandType: CommandType.StoredProcedure
+            var command = new CommandDefinition(
+                APMConstants.StoredProcedures.APM_GetCustomersWithSitesAndResponsible,
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
             );
+
+            var result = await dbConnection.QueryAsync<CustomerResponsible>(command);
 
             return result.ToList();
         }
 
-        public async Task<List<AuthorizedLocation>> GetAuthorizedLocationListByIdUserAsync(int idUser)
+        public async Task<List<AuthorizedLocation>> GetAuthorizedLocationListByIdUserAsync(int idUser, CancellationToken cancellationToken = default)
         {
-            const string spName = "APM_GetAuthorizedLocationListByIdUser_V2690";
-
             var parameters = new DynamicParameters();
             parameters.Add("_idUser", idUser);
 
-            var result = await dbConnection.QueryAsync<AuthorizedLocation>(
-                spName,
+            var command = new CommandDefinition(
+                APMConstants.StoredProcedures.APM_GetAuthorizedLocationListByIdUser,
                 parameters,
-                commandType: CommandType.StoredProcedure
+                commandType: CommandType.StoredProcedure,
+                cancellationToken: cancellationToken
             );
+
+            var result = await dbConnection.QueryAsync<AuthorizedLocation>(command);
 
             return result.ToList();
         }
