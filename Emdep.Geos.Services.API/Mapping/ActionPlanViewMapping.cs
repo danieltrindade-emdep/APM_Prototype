@@ -65,7 +65,7 @@ namespace Emdep.Geos.Services.API.Mapping
                 .Map(dest => dest.Name, src => $"{src.CustomerName} ({src.SiteName})");
 
             config.NewConfig<Responsible, ResponsibleFilterDTO>()
-                .Map(dest => dest.Id, src => (int)src.IdEmployee)
+                .Map(dest => dest.Id, src => src.IdEmployee)
                 .Map(dest => dest.DisplayName, src => src.ResponsibleDisplayName)
                 .Map(dest => dest.ImageUrl, src => $"{_settings.Images.BaseUrlRounded}{src.EmployeeCode}.png")
                 .Map(dest => dest.BackupImageUrl, src => $"{_settings.Images.BaseUrlNormal}{src.EmployeeCode}.png");
@@ -79,7 +79,7 @@ namespace Emdep.Geos.Services.API.Mapping
                         : $"{_settings.Images.BaseUrlCountries}{src.CountryIso}.png");
 
             config.NewConfig<Department, GenericLookupFilterDTO>()
-                .Map(dest => dest.Id, src => (int)src.IdDepartment)
+                .Map(dest => dest.Id, src => src.IdDepartment)
                 .Map(dest => dest.Name, src => src.DepartmentName);
 
             config.NewConfig<LookupValue, GenericLookupFilterDTO>()

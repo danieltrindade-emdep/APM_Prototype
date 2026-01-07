@@ -2,7 +2,7 @@
 {
     public class Department
     {
-        public uint IdDepartment { get; set; }
+        public int IdDepartment { get; set; }
         public string DepartmentName { get; set; }
         public string Abbreviation { get; set; }
     }

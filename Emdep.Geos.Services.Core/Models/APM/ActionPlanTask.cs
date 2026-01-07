@@ -61,6 +61,6 @@
         public string Participant { get; set; }
         public string OriginWeek { get; set; }
         public string TaskCode { get; set; }
-        public List<ActionPlanSubTask> SubTaskList { get; set; } = new();
+        public List<ActionPlanSubTask> SubTaskList { get; set; } = [];
     }
 }
