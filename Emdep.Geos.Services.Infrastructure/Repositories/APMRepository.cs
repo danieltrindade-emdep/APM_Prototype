@@ -135,6 +135,19 @@ namespace Emdep.Geos.Infrastructure.Repositories
             return result.ToList();
         }
 
+        public async Task<List<int>> GetAvailableYearsAsync(CancellationToken cancellationToken = default)
+        {
+            var command = new CommandDefinition(
+                APMConstants.SqlQueries.GetAvailableYearsQuery,
+                commandType: CommandType.Text,
+                cancellationToken: cancellationToken
+            );
+
+            var result = await dbConnection.QueryAsync<int>(command);
+
+            return result.ToList();
+        }
+
         #endregion
 
     }

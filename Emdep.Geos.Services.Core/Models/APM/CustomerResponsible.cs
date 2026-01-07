@@ -12,7 +12,6 @@
         public string SalesOwner { get; set; }
         public string SalesOwnerPlant { get; set; }
         public int IdCompany { get; set; }
-
         public int? IdZone { get; set; }
         public string Region { get; set; }
     }

@@ -11,5 +11,6 @@ namespace Emdep.Geos.Core.Interfaces
         Task<List<Responsible>> GetResponsibleByLocationAsync(string idCompanyLocation, CancellationToken cancellationToken = default);
         Task<List<YBPCode>> GetAllYBPCodeAsync(CancellationToken cancellationToken = default);
         Task<List<CustomerResponsible>> GetCustomersWithSitesAndResponsibleAsync(CancellationToken cancellationToken = default);
+        Task<List<int>> GetAvailableYearsAsync(CancellationToken cancellationToken = default);
     }
 }

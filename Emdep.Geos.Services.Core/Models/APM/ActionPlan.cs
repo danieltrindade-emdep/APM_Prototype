@@ -20,11 +20,9 @@
         public int IdBusinessUnit { get; set; }
         public string BusinessUnit { get; set; }
         public string BusinessUnitHtmlColor { get; set; }
-
         public int TotalActionItems { get; set; }
         public int TotalOpenItems { get; set; }
         public int TotalClosedItems { get; set; }
-
         public int CreatedBy { get; set; }
         public string CreatedByName { get; set; }
         public DateTime CreatedIn { get; set; }
@@ -32,7 +30,6 @@
         public string Department { get; set; }
         public string OriginDescription { get; set; }
         public string ActionPlanResponsibleDisplayName { get; set; }
-
         public int IdSite { get; set; }
         public string SiteName { get; set; }
         public int IdCustomer { get; set; }

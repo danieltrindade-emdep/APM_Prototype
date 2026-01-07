@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using MySqlConnector; // Required to catch MySqlException
+using MySqlConnector;
 
 namespace Emdep.Geos.API.Middleware;
 

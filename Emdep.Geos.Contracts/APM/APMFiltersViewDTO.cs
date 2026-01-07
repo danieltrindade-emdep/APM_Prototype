@@ -1,4 +1,4 @@
-﻿namespace Emdep.Geos.Contracts.ETMModule
+﻿namespace Emdep.Geos.Contracts.APM
 {
     public class APMFiltersViewDTO
     {
@@ -14,31 +14,32 @@
 
     public record GenericLookupFilterDTO
     {
-        public int Id { get; init; } // IdLookupValue
-        public string Name { get; init; } // Value
+        public int Id { get; init; }
+        public string Name { get; init; }
     }
 
     public record LocationFilterDTO
     {
-        public int Id { get; init; } // IdCompany
-        public string Name { get; init; } // Alias
+        public int Id { get; init; }
+        public string Name { get; init; }
         public string CountryIso { get; init; }
+        public string CountryIconUrl { get; init; }
     }
 
     public record ResponsibleFilterDTO
     {
-        public int Id { get; init; } // IdEmployee
-        public string Name { get; init; } // FullName
-        public string DisplayName { get; init; } // ResponsibleDisplayName
+        public int Id { get; init; }
+        public string DisplayName { get; init; }
         public string EmployeeCode { get; init; }
         public int IdGender { get; init; }
         public string ImageUrl { get; init; }
+        public string BackupImageUrl { get; init; }
     }
 
     public record ThemeFilterDTO
     {
-        public int Id { get; init; } // IdLookupValue
-        public string Name { get; init; } // Value
+        public int Id { get; init; }
+        public string Name { get; init; }
         public string HtmlColor { get; init; }
     }
 }

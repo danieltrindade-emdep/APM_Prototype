@@ -20,6 +20,12 @@
                 FROM lookup_values 
                 WHERE IdLookupKey = @Key AND InUse = 1 
                 ORDER BY Position";
+
+            public const string GetAvailableYearsQuery = @"
+                SELECT DISTINCT YEAR(CreatedIn) 
+                FROM action_plans 
+                WHERE CreatedIn IS NOT NULL 
+                ORDER BY YEAR(CreatedIn) ASC";
         }
     }
 }

@@ -9,5 +9,6 @@
     {
         public string BaseUrlRounded { get; set; }
         public string BaseUrlNormal { get; set; }
+        public string BaseUrlCountries { get; set; }
     }
 }

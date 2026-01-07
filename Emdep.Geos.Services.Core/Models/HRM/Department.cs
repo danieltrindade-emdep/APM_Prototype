@@ -5,7 +5,5 @@
         public uint IdDepartment { get; set; }
         public string DepartmentName { get; set; }
         public string Abbreviation { get; set; }
-
-        public override string ToString() => DepartmentName;
     }
 }
