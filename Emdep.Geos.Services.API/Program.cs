@@ -1,4 +1,5 @@
 using Emdep.Geos.Services.API.Extensions;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -11,6 +12,14 @@ try
     Log.Information("Starting APM PROTOTYPE API...");
 
     var builder = WebApplication.CreateBuilder(args);
+
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        options.ConfigureEndpointDefaults(defaults =>
+        {
+            defaults.Protocols = HttpProtocols.Http1AndHttp2;
+        });
+    });
 
     builder.Host.UseSerilog((context, services, configuration) => configuration
         .ReadFrom.Configuration(context.Configuration)
